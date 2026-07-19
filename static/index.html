@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heart Disease Prediction API</title>
+    <meta name="description" content="A beautiful, interactive interface for the Heart Disease Prediction API. Enter patient data and get an instant AI-powered risk assessment." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <!-- Background orbs -->
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="bg-orb orb3"></div>
+
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <span class="logo-icon">❤️</span>
+                <span class="logo-text">HeartAI</span>
+            </div>
+            <nav class="nav-pills">
+                <a href="#predict" class="nav-pill active">Predict</a>
+                <a href="#monitor" class="nav-pill">Monitor</a>
+                <a href="/docs" class="nav-pill" target="_blank">API Docs</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span class="status-dot" id="hero-status-dot"></span>
+                <span id="hero-status-text">Checking API...</span>
+            </div>
+            <h1 class="hero-title">Heart Disease<br/><span class="gradient-text">Risk Predictor</span></h1>
+            <p class="hero-subtitle">Powered by a Random Forest model trained on clinical data. Enter patient vitals below to assess cardiovascular risk instantly.</p>
+        </section>
+
+        <!-- Predict Section -->
+        <section id="predict" class="section">
+            <div class="card glass-card">
+                <div class="card-header">
+                    <h2 class="card-title">Patient Assessment</h2>
+                    <p class="card-subtitle">Fill in the clinical parameters below</p>
+                </div>
+
+                <form id="prediction-form" class="predict-form" autocomplete="off">
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="age">Age <span class="unit">years</span></label>
+                            <input type="number" id="age" name="age" placeholder="e.g. 55" min="1" max="120" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sex">Sex</label>
+                            <select id="sex" name="sex" required>
+                                <option value="" disabled selected>Select sex</option>
+                                <option value="1">Male</option>
+                                <option value="0">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cp">Chest Pain Type</label>
+                            <select id="cp" name="cp" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="0">Typical Angina (0)</option>
+                                <option value="1">Atypical Angina (1)</option>
+                                <option value="2">Non-anginal Pain (2)</option>
+                                <option value="3">Asymptomatic (3)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="trestbps">Resting Blood Pressure <span class="unit">mm Hg</span></label>
+                            <input type="number" id="trestbps" name="trestbps" placeholder="e.g. 120" min="50" max="250" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="chol">Serum Cholesterol <span class="unit">mg/dl</span></label>
+                            <input type="number" id="chol" name="chol" placeholder="e.g. 200" min="50" max="600" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fbs">Fasting Blood Sugar &gt;120 mg/dl</label>
+                            <select id="fbs" name="fbs" required>
+                                <option value="" disabled selected>Select option</option>
+                                <option value="1">Yes (True)</option>
+                                <option value="0">No (False)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="restecg">Resting ECG Results</label>
+                            <select id="restecg" name="restecg" required>
+                                <option value="" disabled selected>Select result</option>
+                                <option value="0">Normal (0)</option>
+                                <option value="1">ST-T Abnormality (1)</option>
+                                <option value="2">Left Ventricular Hypertrophy (2)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="thalach">Max Heart Rate Achieved <span class="unit">bpm</span></label>
+                            <input type="number" id="thalach" name="thalach" placeholder="e.g. 150" min="60" max="250" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exang">Exercise Induced Angina</label>
+                            <select id="exang" name="exang" required>
+                                <option value="" disabled selected>Select option</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="oldpeak">ST Depression <span class="unit">mm</span></label>
+                            <input type="number" id="oldpeak" name="oldpeak" placeholder="e.g. 1.5" step="0.1" min="0" max="10" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="slope">Peak Exercise ST Slope</label>
+                            <select id="slope" name="slope" required>
+                                <option value="" disabled selected>Select slope</option>
+                                <option value="0">Upsloping (0)</option>
+                                <option value="1">Flat (1)</option>
+                                <option value="2">Downsloping (2)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ca">Major Vessels Colored <span class="unit">0–4</span></label>
+                            <input type="number" id="ca" name="ca" placeholder="e.g. 0" min="0" max="4" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="thal">Thalassemia (Thal)</label>
+                            <select id="thal" name="thal" required>
+                                <option value="" disabled selected>Select type</option>
+                                <option value="0">Unknown (0)</option>
+                                <option value="3">Normal (3)</option>
+                                <option value="6">Fixed Defect (6)</option>
+                                <option value="7">Reversible Defect (7)</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="fill-sample-btn" class="btn btn-secondary">Load Sample Patient</button>
+                        <button type="submit" id="predict-btn" class="btn btn-primary">
+                            <span class="btn-icon">🔍</span>
+                            <span class="btn-text">Analyze Risk</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Result -->
+                <div id="result-area" class="result-area hidden">
+                    <div class="result-divider"></div>
+                    <div id="result-card" class="result-card">
+                        <div class="result-icon-wrap">
+                            <span id="result-icon" class="result-icon"></span>
+                        </div>
+                        <div class="result-body">
+                            <p class="result-label">Prediction Result</p>
+                            <h3 id="result-text" class="result-title"></h3>
+                            <p id="result-desc" class="result-desc"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="error-area" class="error-area hidden">
+                    <p id="error-text" class="error-text"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Monitor Section -->
+        <section id="monitor" class="section">
+            <div class="section-header">
+                <h2 class="section-title">System Monitor</h2>
+                <button id="refresh-btn" class="btn btn-ghost" onclick="refreshMonitor()">↻ Refresh</button>
+            </div>
+
+            <div class="monitor-grid">
+                <!-- API Status Card -->
+                <div class="monitor-card glass-card">
+                    <div class="monitor-card-header">
+                        <span class="monitor-icon">🟢</span>
+                        <h3 class="monitor-card-title">API Health</h3>
+                    </div>
+                    <div class="monitor-stat">
+                        <span class="stat-label">Status</span>
+                        <span id="api-status" class="stat-value status-badge">—</span>
+                    </div>
+                    <div class="monitor-stat">
+                        <span class="stat-label">Response Time</span>
+                        <span id="api-latency" class="stat-value">—</span>
+                    </div>
+                    <div class="monitor-stat">
+                        <span class="stat-label">Last Checked</span>
+                        <span id="api-last-checked" class="stat-value">—</span>
+                    </div>
+                </div>
+
+                <!-- Model Info Card -->
+                <div class="monitor-card glass-card">
+                    <div class="monitor-card-header">
+                        <span class="monitor-icon">🤖</span>
+                        <h3 class="monitor-card-title">Model Info</h3>
+                    </div>
+                    <div class="monitor-stat">
+                        <span class="stat-label">Model Type</span>
+                        <span id="model-type" class="stat-value">—</span>
+                    </div>
+                    <div class="monitor-stat">
+                        <span class="stat-label">Input Features</span>
+                        <span id="feature-count" class="stat-value">—</span>
+                    </div>
+                    <div class="monitor-stat">
+                        <span class="stat-label">API Version</span>
+                        <span id="api-version" class="stat-value">1.0.0</span>
+                    </div>
+                </div>
+
+                <!-- Features Card -->
+                <div class="monitor-card glass-card monitor-card-wide">
+                    <div class="monitor-card-header">
+                        <span class="monitor-icon">📋</span>
+                        <h3 class="monitor-card-title">Input Feature List</h3>
+                    </div>
+                    <div id="feature-list" class="feature-chips">
+                        <span class="feature-chip skeleton"></span>
+                        <span class="feature-chip skeleton"></span>
+                        <span class="feature-chip skeleton"></span>
+                    </div>
+                </div>
+
+                <!-- Uptime pulse card -->
+                <div class="monitor-card glass-card">
+                    <div class="monitor-card-header">
+                        <span class="monitor-icon">📡</span>
+                        <h3 class="monitor-card-title">Live Pulse</h3>
+                    </div>
+                    <div class="pulse-graph">
+                        <canvas id="pulse-canvas" width="260" height="60"></canvas>
+                    </div>
+                    <p class="pulse-label">Health check every 10s</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Built with <span style="color:#f87171">♥</span> · FastAPI + RandomForest · <a href="/docs" target="_blank">OpenAPI Docs</a></p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -3,8 +3,17 @@ import joblib
 import pandas as pd
 import os
 from .schemas import HeartDiseaseFeatures, PredictionResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 app = FastAPI(title="Heart Disease Prediction API", version="1.0.0")
+
+# Mount the static directory for UI and CSS/JS
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", include_in_schema=False)
+def serve_ui():
+    return FileResponse("static/index.html")
 
 # Load the model on startup
 MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "model", "heart_model.joblib")
